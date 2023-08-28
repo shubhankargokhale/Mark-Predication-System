@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Marks Prediction</title>
+<style>
+<body>
+{
+      background-image: url("C:\Users\Shubhankar Gokhale\Desktop\project\New folder\sg.jpeg.jpeg");
+      background-size: cover;
+      background-position: center;
+      font-family: Arial, sans-serif;
+    }
+</body>
+
+form {
+  border: 1px solid #ccc;
+  padding: 20px;
+  margin: 20px auto;
+  width: 50%;
+  max-width: 600px;
+}
+
+label {
+  display: block;
+  margin-bottom: 10px;
+}
+
+input[type="number"] {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 100%;
+  box-sizing: border-box;
+  margin-bottom: 20px;
+}
+
+button {
+  background-color: #4CAF50;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #45a049;
+}
+
+// 3
+
+@media (max-width: 768px) {
+  form {
+    width: 90%;
+  }
+}
+
+
+</style>
+</head>
+<body>
+
+
+	<h1>Marks Prediction System</h1>
+	<p>Please enter the following information to predict your End-Semister marks:</p>
+
+	<form>
+		<label for="exam1">Score in CA1(Out of 10):</label>
+		<input type="number" id="exam1" name="exam1"><br><br>
+
+		<label for="exam2">Score in Mid-Sem(Out of 20):</label>
+		<input type="number" id="exam2" name="exam2"><br><br>
+
+                <label for="exam3">Score in CA2(Out of 10):</label>
+		<input type="number" id="exam1" name="exam1"><br><br>
+
+		<button type="button" onclick="predictMarks()">Predict Marks</button>
+	</form>
+
+	<p id="predicted-marks"></p>
+
+	<script>
+		// Linear regression function
+		function linearRegression(x, y) {
+			var sumX = 0, sumY = 0, sumXY = 0, sumX2 = 0, n = x.length;
+
+			for (var i = 0; i < n; i++) {
+				sumX += x[i];
+				sumY += y[i];
+				sumXY += x[i] * y[i];
+				sumX2 += x[i] * x[i];
+			}
+
+			var slope = (n * sumXY - sumX * sumY) / (n * sumX2 - sumX * sumX);
+			var intercept = (sumY - slope * sumX) / n;
+
+			return [slope, intercept];
+		}
+
+		// Predict marks function
+		function predictMarks() {
+			var exam1Score = document.getElementById("exam1").value;
+			var exam2Score = document.getElementById("exam2").value;
+                        var exam2Score = document.getElementById("exam2").value;
+			
+
+			// Previous exam scores and marks data
+			var previousExamScores = [[60, 70], [70, 80], [80, 90], [90, 100], [100, 110]];
+			var previousExamMarks = [70, 80, 90, 100, 110];
+
+			// Linear regression on previous exam scores and marks data
+			var x = [], y = [];
+			for (var i = 0; i < previousExamScores.length; i++) {
+				x.push(previousExamScores[i][0]);
+				y.push(previousExamMarks[i]);
+			}
+			var coefficients1 = linearRegression(x, y);
+
+			x = [], y = [];
+			for (var i = 0; i < previousExamScores.length; i++) {
+				x.push(previousExamScores[i][1]);
+				y.push(previousExamMarks[i]);
+			}
+			var coefficients2 = linearRegression(x, y);
+
+			// Predict marks
+			var predictedMarks = coefficients1[0] * exam1Score + coefficients2[0] * exam2Score + coefficients1[1] + coefficients2[1];
+
+			// Display predicted marks
+			document.getElementById("predicted-marks").innerHTML = "Your predicted End Semister marks are: " + predictedMarks + " out of 60";
+		}
+	</script>
+</body>
+</html>
